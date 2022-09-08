@@ -5,6 +5,7 @@
 import EditOffOutlinedIcon from '@mui/icons-material/EditOffOutlined';
 import {DownloadIcon} from '@mui/icons-material/Download';
 import '../pages/Profile.css'
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -16,35 +17,105 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useContext } from "react";
 import { UserContext } from "../userContext";
-import { ConstructionOutlined } from '@mui/icons-material';
+import EditCaretPositioning from '../caretPositioning';
+import { ConstructionOutlined, Html } from '@mui/icons-material';
+import { setSelectionRange } from '@testing-library/user-event/dist/utils';
+import EducationInProfile from '../components/EducationInProfile';
+import { Button } from '@mui/material';
 function Profile() {
   
 
   const {User,loading}  = useContext(UserContext);
   const [edit,setedit] = useState(false);
-
+    const navigate = useNavigate();
 // console.log(displayName,email)
+const [cursor,setcursor] = useState({
+    start:0,
+    end:0,
+})
+
   const [profileForm,setprofieFrom] = useState({
      name:User?.displayName,
      profession:'STUDENT | SOFTWARE ENGINEER ',
      location:'KANCHIPURAM',
       email:User?.email,
+      socilLinks:{
+          git_Name:'your github name',
+          git_Link:'http://localhost:3000/profile',
+
+
+          LinkedIn_Name:'your linkedIn name',
+          LinkedIn_Link:'http://localhost:3000/profile',
+
+          
+
+      },
+      Profile:"An enthusiastic individual seeking a challenging position in an organization which will provide me the opportunity to improve my skills and knowledge to grow along with the organization's objective.",
+      Education:[
+        {    
+            id:1,
+            educationTitle:'B.Tech INFORMATION TECHNOLOGY',
+            instuteName:'SAVEETHA ENGINEERING COLLEGE',
+            mark:'CGPA - 8.4',
+            duration:'2019 - PRESENT',
+            isLast:false,
+        },
+        {    
+            id:2,
+            educationTitle:'12TH',
+            instuteName:'Sri Jayendra Golden Jubilee School,Kanchipuram.',
+            mark:'Percentage - 74%',
+            duration:'2018 - 2019',
+            isLast:false,
+
+        }
+        ,
+        {
+
+            id:3,
+            educationTitle:'10TH',
+            instuteName:'Sri Jayendra Golden Jubilee School,Kanchipuram.',
+            mark:'CGPA - 9.4',
+            duration:'2016 - 2017',
+            isLast:true,
+        }
+      ]
+ 
+   
+
+
+ });
+ useEffect(()=>{
+
+    
+   setprofieFrom(pre=>({...pre,name:User?.displayName,email:User?.email}))
+
+
+ },[loading])
 
 
 
-
-     
-
-
-  });
-console.log(User)
+if(!User){
+   navigate('/');
+}
   
+
   const handleChange = (e)=>{
-    // console.log(e.target.getAttribute('name') +":"+e.target.innerText);
-         setprofieFrom(pre=>({...pre,[e.target.getAttribute('name')] : e.target.innerText}))
-         console.log(profileForm)
+      setprofieFrom(pre=>({...pre,[e.target.getAttribute('name')] :e.target.innerText}))
+ }
+ 
+
+  const handleChangesocialLink = (e)=>{
+ 
+    const obj  = {
+        [e.target.getAttribute('name')]:e.target.innerText,
+    }
+    console.log(obj)
+      setprofieFrom(pre=>({...pre,socilLinks:{...profileForm.socilLinks,
+        [e.target.getAttribute('name')]:e.target.innerText
+    }}))
   }
-console.log(profileForm);
+
   return (
     <>
     {!loading ?
@@ -53,8 +124,11 @@ console.log(profileForm);
      <p>Edit</p>
       {edit ?<EditOutlinedIcon/>:<EditOffOutlinedIcon/>}
 
+    <span>
+        
+         {edit && <p>you are in Edit Mode</p>}
+        </span>
      </div>
-     {edit && <p>you are in Edit Mode</p>}
        {/* <header className="l-header" id="header">
             <nav className="nav bd-container">
                 <p className="nav__logo">Aravindhan S</p>
@@ -111,7 +185,7 @@ console.log(profileForm);
             </nav>
         </header> */}
 
-        <main className="l-main bd-container">
+        <main suppressContentEditableWarning={true} className="l-main bd-container">
             {/* <!-- All elements within this div, is generated in PDF --> */}
             <div className="resume" id="area-cv">
                 <div className="resume__left">
@@ -122,8 +196,15 @@ console.log(profileForm);
                                 <img contentEditable={edit} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS4QidFaZYBUsAO_ostR0S-m5nyF3u55L4dvn09QKrcTv5gzTmx80sfa-Rz48qJrKmAF4&usqp=CAU" alt="" className="home__img"/>
 
 
-                                <h1 className="home__title"><b name="name" contentEditable={edit}  onInput={handleChange}>{User?.displayName}</b></h1>
-                                <h3 className="home__profession" contentEditable={edit} name="profession" onInput={handleChange}>STUDENT | SOFTWARE ENGINEER </h3>
+                                <h1 className="home__title">
+                                    <b name="name"
+                                     contentEditable={edit}  
+                                     onBlur={handleChange}             
+                                     suppressContentEditableWarning={true}>
+
+                                        {User?.displayName}
+                                        </b></h1>
+                                <h3 className="home__profession" contentEditable={edit} name="profession"  onBlur={handleChange}    suppressContentEditableWarning={true}>{profileForm.profession} </h3>
                                 <div>
                                    { !edit && <a download="" href="assets/pdf/" className="home__button-movil" >Download</a>}
                                 </div>
@@ -134,13 +215,27 @@ console.log(profileForm);
 
                             <div className="home__address bd-grid">
                                 <span className="home__information">
-                                    <LocationOnOutlinedIcon className='bx bx-map home__icon'/><p name="location" contentEditable={edit}  onInput={handleChange}> KANCHIPURAM</p>
+                                    <LocationOnOutlinedIcon  className='bx bx-map home__icon'/>
+                                    <p name="location" 
+
+                                    contentEditable={edit}  
+
+                                    onBlur={handleChange}     
+                                     suppressContentEditableWarning={true}
+
+
+
+
+
+                                     >
+                                                {profileForm.location}
+                                        </p>
                                 </span>
                                 <span className="home__information">
-                                     <EmailIcon className='bx bxs-envelope home__icon' /><p name="email" contentEditable={edit}  onInput={handleChange}> {User.email}</p>
+                                     <EmailIcon className='bx bxs-envelope home__icon' /><p name="email" contentEditable={edit}   onBlur={handleChange}             suppressContentEditableWarning={true}> {User?.email}</p>
                                 </span>
                                 <span className="home__information">
-                                    <PhoneAndroidIcon className='bx bx-phone home__icon'/><p name="phoneno" contentEditable={edit}  onInput={handleChange}>  8248832238</p>
+                                    <PhoneAndroidIcon className='bx bx-phone home__icon'/><p name="phoneno" contentEditable={edit}  onBlur={handleChange}        suppressContentEditableWarning={true}>  8248832238</p>
                                 </span>
                             </div>
                         </div>
@@ -159,13 +254,57 @@ console.log(profileForm);
                     <section className="social section">
                         <h2 className="section-title">SOCIAL</h2>
 
+                         { edit && <LinkedInIcon className='bx bxl-linkedin-square social__icon'   />}
                         <div className="social__container bd-grid">
-                            <a href="https://www.linkedin.com/in/aravindhan-s-68b23b1b7/" target="_blank" className="social__link">
-                                <LinkedInIcon className='bx bxl-linkedin-square social__icon'/>@AravindhanS
+                            <a href={profileForm.socilLinks.LinkedIn_Link} 
+                             target='_blank' 
+                            className="social__link"
+                            name="LinkedIn_Name" 
+                            contentEditable={edit}  
+                            onBlur={handleChangesocialLink}   
+                            suppressContentEditableWarning={true}
+                            >
+                         { !edit && <LinkedInIcon className='bx bxl-linkedin-square social__icon'   />}
+                            
+  
+                      <p>  {profileForm.socilLinks.LinkedIn_Name}</p>
+
+
                             </a>
-                            <a href="https://github.com/Aravind4202" target="_blank" className="social__link">
-                                <GitHubIcon className='bx bxl-github social__icon'/> @Aravind4202
+                          
+                            {edit && <p  
+                            name="LinkedIn_Link" 
+                            contentEditable={edit}  
+                            onBlur={handleChangesocialLink}          
+                            suppressContentEditableWarning={true}>
+                                
+                             {profileForm.socilLinks.LinkedIn_Link}
+
+                             </p>}
+
+                            
+{/* for git  hub  */}
+
+
+{edit && <GitHubIcon className='bx bxl-github social__icon'/>}
+     
+                            <a href={profileForm.socilLinks.git_Link}  
+                            target="_blank" 
+                            className="social__link" 
+                             name="git_Name" 
+                             contentEditable={edit}  
+                             suppressContentEditableWarning={true}
+                             onBlur={handleChangesocialLink}>
+                               {!edit && <GitHubIcon className='bx bxl-github social__icon'/>}<p>{profileForm.socilLinks.git_Name} </p>
                             </a>
+                            {edit && 
+                            <p  
+                            name="git_Link"
+                             contentEditable={edit}  
+                             onBlur={handleChangesocialLink}   
+                             defaultValue={profileForm.socilLinks.git_Link}     
+                            
+                             suppressContentEditableWarning={true}>{profileForm.socilLinks.git_Link}</p>}
                         </div>
                     </section>
 
@@ -173,7 +312,10 @@ console.log(profileForm);
                     <section className="profile section" id="profile">
                         <h2 className="section-title">Profile</h2>
 
-                        <p align="justify" name="Profile" contentEditable={edit}  onInput={handleChange}>An enthusiastic individual seeking a challenging position in an organization which will provide me the opportunity to improve my skills and knowledge to grow along with the organization's objective.</p>
+                        <p align="justify" name="Profile" 
+                        contentEditable={edit}          
+                        suppressContentEditableWarning={true} 
+                        onBlur={handleChange}>An enthusiastic individual seeking a challenging position in an organization which will provide me the opportunity to improve my skills and knowledge to grow along with the organization's objective.</p>
                     </section>
 
                     {/* <!--========== EDUCATION ==========--> */}
@@ -181,48 +323,12 @@ console.log(profileForm);
                         <h2 className="section-title">Education</h2>
 
                         <div className="education__container bd-grid">
-                            <div className="education__content">
-                                <div className="education__time">
-                                    <span className="education__rounder"></span>
-                                    <span className="education__line"></span>
-                                </div>
-
-                                <div className="education__data bd-grid">
-                                    <h3 className="education__title">B.Tech INFORMATION TECHNOLOGY</h3>
-                                    <span className="education__studies">SAVEETHA ENGINEERING COLLEGE</span>
-                                    <span className="education__year">CGPA - 8.4</span>
-                                    <span className="education__year">2019 - PRESENT</span>
-                                </div>
-                            </div>
-
-                            <div className="education__content">
-                                <div className="education__time">
-                                    <span className="education__rounder"></span>
-                                    <span className="education__line"></span>
-                                </div>
-
-                                <div className="education__data bd-grid">
-                                    <h3 className="education__title">12TH</h3>
-                                    <span className="education__studies">Sri Jayendra Golden Jubilee School,Kanchipuram.</span>
-                                    <span className="education__year">Percentage - 74%</span>
-                                    <span className="education__year">2018 - 2019</span>
-                                </div>
-                            </div>
-
-                            <div className="education__content">
-                                <div className="education__time">
-                                    <span className="education__rounder"></span>
-
-                                </div>
-
-                                <div className="education__data bd-grid">
-                                    <h3 className="education__title">10TH</h3>
-                                    <span className="education__studies">Sri Jayendra Golden Jubilee School,Kanchipuram.</span>
-                                    <span className="education__year">CGPA - 9.4</span>
-                                    <span className="education__year">2016 - 2017</span>
-                                </div>
-                            </div>
+                         <EducationInProfile 
+                         profileForm={profileForm} 
+                         setprofieFrom={setprofieFrom} 
+                         edit={edit} />
                         </div>
+                      
                     </section>
 
 

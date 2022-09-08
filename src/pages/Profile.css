@@ -337,17 +337,26 @@ img{
   text-align: center;
 }
 .edit{
+
+  position: sticky;
+
     z-index: 100;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
+    background-color: lightgray;
+
+    top: 70px;
     color: black;
-    margin: 30px;
+
+
 
 }
-.edit p{
+.edit span p{
   margin-right: 10px;
+  color: red;
 }
 .home__img{
   width: 120px;
@@ -432,6 +441,8 @@ img{
   text-align: center
   text-align: justify;
 } */
+
+
 
 /*========== EDUCATION AND EXPERIENCE ==========*/
 .education__content,
