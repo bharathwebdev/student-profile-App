@@ -65,6 +65,7 @@ body.dark-theme{
   cursor: pointer;
 }
 
+
 .change-theme:hover{
   color: var(--title-color);
 }
@@ -80,15 +81,10 @@ body.scale-cv{
 }
 
 /*========== Generate PDF button ==========*/
-.generate-pdf{
+.download_btn_small{
   display: none;
-  position: absolute;
-  top: 2.2rem;
-  left: 0;
-  font-size: 1.0rem;
-  color: var(--text-color);
-  cursor: pointer;
 }
+
 
 .generate-pdf:hover{
   color: var(--title-color);
@@ -102,6 +98,7 @@ body.scale-cv{
 
 .scale-cv .bd-container{
   max-width: 595px;
+
 }
 
 .scale-cv .section{
@@ -217,7 +214,7 @@ img{
 .section{
   padding: 0.5rem 0;
 }
-
+ 
 .section-title{
   font-size: var(--h2-font-size);
   color: var(--title-color);
@@ -229,11 +226,10 @@ img{
 }
 
 /*========== LAYOUT ==========*/
-.profile{
-    margin-top: 100px;
-}
+
 .bd-container{
   max-width: 968px;
+  margin-top: 50px;
   width: calc(100% - 3rem);
   margin-left: var(--mb-3);
   margin-right: var(--mb-3);
@@ -244,6 +240,7 @@ img{
   gap: 0.7rem;
 }
 
+
 .l-header{
   width: 100%;
   
@@ -252,7 +249,23 @@ img{
   box-shadow: 0 -1px 4px rgba(0,0,0,.1);
   transition: .3s;
 }
+  
+.profile_whole_container{
+  margin-top: 100px;
+}
+.profilePhoto{
+  display: none;
+}
+.img_div_profile{
+  position: relative;
+}
+.imgload{
+  position: absolute;
+  top: 35%;
+  right: 45%;
 
+  color: blue;
+}
 /*========== NAV ==========*/
 .nav{
   height: var(--header-height);
@@ -260,6 +273,24 @@ img{
   justify-content: space-between;
   align-items: center;
 }
+.profile_img_edit_section{
+  position: relative;
+  
+}
+.Profile_Edit_icon{
+
+ position: absolute;
+ bottom: 10%;
+ left: 60%;
+ color:black;
+
+ 
+
+
+
+}
+
+
 
 @media screen and (max-width: 968px){
   .nav__menu{
@@ -274,6 +305,10 @@ img{
     z-index: var(--z-fixed);
     transition: .3s;
   }
+  .profile .bd-container {
+     margin-top: 100px;
+   } 
+
 }
 
 .nav__logo,
@@ -336,31 +371,27 @@ img{
   gap: .5rem;
   text-align: center;
 }
-.edit{
-
-  position: sticky;
-
-    z-index: 100;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: lightgray;
-
-    top: 70px;
-    color: black;
 
 
 
+.edit_container{
+position:sticky;
+ margin-left: auto;
+ margin-right: auto;
+ top: 70px;
+ display: flex;
+
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
 }
 .edit span p{
   margin-right: 10px;
   color: red;
 }
 .home__img{
-  width: 120px;
-  height: 140px;
+  width: 150px;
+  height:150px;
   object-fit: cover;
   border-radius: 50%;
   justify-self: center;
@@ -406,6 +437,30 @@ img{
   transition: .3s;
   font-weight: var(--font-medium);
   margin-top: var(--mb-3);
+}
+.edit{
+  display: flex;
+  justify-content: center;
+   align-items: center;
+  background-color: black;
+  border-radius: 50%;
+  color: white;
+  position: fixed;
+  top: 6rem;
+  right: 3rem;
+  width: 3rem;
+  height: 3rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  cursor: pointer;
+  z-index: 100;
+ transition: all 0.5s ease;
+
+  
+
+
+}
+.edit:active{
+  transform: scale(0.8);
 }
 
 .home__vutton-movil:hover{
@@ -585,6 +640,7 @@ img{
     grid-template-columns: repeat(2,1fr);
     gap: 1rem .5rem;
   }
+
 }
 
 /* Classes modified for large screen size */
@@ -618,10 +674,22 @@ img{
   .resume__right{
     padding: 0 1.5rem;
   }
+.download_btn_small{
+  display: block;
+
+}
 
   .generate-pdf{
-    display: inline-block;
+    display: flex;
+    position: absolute;
+    top: 2.2rem;
+    left: 0;
+    font-size: 1.0rem;
+    visibility: visible;
+    color: var(--text-color);
+    cursor: pointer;
   }
+
 
   .section-title,
   .profile__description{

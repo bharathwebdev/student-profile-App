@@ -1,0 +1,51 @@
+.linkIn_Certificate{
+
+
+    animation-name: example;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    color:blue;
+    transition: all 0.5s ease;
+  }
+  .certificate__title{
+    animation-name: example2;
+    animation-duration: 2s;
+    margin-bottom: 0;
+    font-weight: bolder;
+    animation-iteration-count: infinite;
+    transition: cubic-bezier(.17,.67,.83,.67)
+  }
+  .delete{
+    margin-left: 10px;
+
+    color: red;
+    font-size: 30px;
+    cursor: pointer;
+    float: right;
+
+
+  }
+  .title_container{
+    display: flex;
+   align-items: center;
+
+  }
+ .links{
+  margin-left: 10px;
+
+ }
+  .deleteicon_container{
+    margin-bottom: 10px;
+  }
+.certificate__description{
+  font-weight: 400;
+  color: rgb(63, 62, 62);
+}
+  @keyframes example {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+  }

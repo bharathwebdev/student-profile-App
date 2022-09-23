@@ -1,0 +1,44 @@
+.add_icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+
+
+}
+.remove_icon{
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+     
+    
+
+}
+
+
+
+li::marker 
+{  
+    display: flex;
+    align-items: center;
+
+    font-size: 2rem;
+    font-weight: bolder;
+    color: rgb(135, 135, 255);
+
+    
+}
+li{
+
+    align-items: center;
+    padding-top: 0;
+
+}
+.activity_desc{
+
+   margin-left: 40px;
+   margin-bottom: 20px;
+
+}

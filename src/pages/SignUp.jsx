@@ -13,12 +13,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {getAuth,createUserWithEmailAndPassword,updateProfile}from'firebase/auth'
-import { getDoc,doc,serverTimestamp, setDoc  } from 'firebase/firestore';
+import { getDoc,doc,serverTimestamp, setDoc, collection, addDoc  } from 'firebase/firestore';
 import { UserContext } from '../userContext';
 import { useContext } from 'react';
 import { db } from '../firebase.config';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import '../App.css';
+import { toast } from 'react-toastify';
 
 
 function Copyright(props) {
@@ -39,7 +41,8 @@ const theme = createTheme();
 
 export default function SignUp() {
 
-  const {User} = useContext(UserContext)
+       
+        const {User,UserprofileData, setUserprofileData,setsnameEID} = useContext(UserContext)
  const navigate  = useNavigate();
   const [showPassword,setshowPassword] = useState(false);
   const [SignUpData,setSignUpData] = useState({
@@ -50,8 +53,17 @@ export default function SignUp() {
   })
   const {email,password,firstName,lastName} = SignUpData;
   SignUpData.fullName = firstName+lastName;
+  useEffect(()=>{
+    const auth = getAuth()
+    if(auth.currentUser){
+     navigate('/')
+    }
+ },[])
+
   const handleSubmit =async(event) => {
     event.preventDefault();
+    const colref = collection(db,'profile')
+   
 try{
  
   const auth  = getAuth();
@@ -67,9 +79,14 @@ try{
   const formDataCopy = {...SignUpData};
   delete formDataCopy.password;
   formDataCopy.timestamp = serverTimestamp();
+  UserprofileData.name= formDataCopy.firstName + " "+ formDataCopy.lastName;
+  UserprofileData.email=formDataCopy.email;
+  UserprofileData.id=user.uid;
+  await setDoc(doc(db,'profile',user.uid),UserprofileData).then(data=>console.log(data));
   await setDoc(doc(db,'users',user.uid),formDataCopy);
+  // await setDoc(doc(db,'users/profile/',user.uid),UserprofileData)
  navigate('/');
-
+ toast.success('successfully signed up')
 }catch(err){
   console.log(err)
 }
@@ -82,11 +99,11 @@ try{
       [e.target.name] : e.target.value
     }))
 }
-console.log(SignUpData)
+// console.log(SignUpData)
   return (
     <>
     
-    <ThemeProvider theme={theme}>
+    <ThemeProvider  theme={theme}>
 
       
       <Container component="main" maxWidth="xs">

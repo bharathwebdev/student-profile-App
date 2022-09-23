@@ -11,14 +11,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+// import { Link } from 'react-router-dom';
+// import Link from '@mui/material/Link';
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
 import { UserContext } from '../userContext';
 import { toast } from 'react-toastify';
+import { LineStyle } from '@mui/icons-material';
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -32,11 +35,13 @@ function Copyright(props) {
   );
 }
 
+
 const theme = createTheme();
 
 export default function SignIn() {
+
 const navigate = useNavigate();
-// const {user,setuser} = useContext(UserContext);
+const {setLoading,loading} = useContext(UserContext);
 const [starterrro,setstarterror] = useState(false);
 const [showPassword,setshowPassword] = useState(false);
 const [SigninData,setSigninData] = useState({
@@ -45,23 +50,43 @@ const [SigninData,setSigninData] = useState({
 })
 
 const {email,password} = SigninData;
+useEffect(()=>{
+   const auth = getAuth()
+   if(auth.currentUser){
+    navigate('/')
+   }
+},[])
+const err = "Firebase: Error (auth/invalid-email)"
 
   const handleSubmit = async(event) => {
   
     event.preventDefault();
+    setLoading(true);
+    
     try{
+        
         const auth = getAuth();
         const userCredential = await signInWithEmailAndPassword(auth,email,password);
      if(userCredential.user){
       //  setuser(userCredential.user)
       navigate('/')
-
+      toast.success('successfully logged in')
+      setLoading(false)
      }
     }catch(error){
+  setLoading(false);
+  const err = JSON.stringify(error.message);
+  console.log(err)
+  const a = err.split(' ')
+  console.log(a)
 
-
-
- console.log(error.message)
+  const b = a[a.length-1].split('/')
+  console.log(b)
+  const c = b[b.length-1].split(')')
+  console.log(c)
+  console.log(c[0])
+  toast.error(c[0])
+//  console.log(error)
 
     }
   };
@@ -74,9 +99,12 @@ const {email,password} = SigninData;
 
   console.log(SigninData)
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+  return (<>
+  
+    <ThemeProvider  theme={theme}>
+      <Container sx={{
+        zIndex:'1'
+      }} component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -93,6 +121,7 @@ const {email,password} = SigninData;
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+
             <TextField
               margin="normal"
               required
@@ -135,6 +164,7 @@ const {email,password} = SigninData;
             >
               Sign In
             </Button>
+
             <div className='Oauth'>
 <h5>OR</h5>
 <h1>G</h1>
@@ -156,5 +186,7 @@ const {email,password} = SigninData;
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
+
+    </>
   );
 }

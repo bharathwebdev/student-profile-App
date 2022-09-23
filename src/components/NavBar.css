@@ -1,5 +1,7 @@
 *{
     margin: 0;
+   padding: 0;
+   box-sizing: border-box;
 }
 .logo{
     display: flex;
@@ -10,19 +12,27 @@
     cursor: pointer;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+.avatar{
+    border: 1px solid black; 
+    
+    
+
+}
+
 
 nav{
     display: flex;
     justify-content: space-between;
     background-color: whitesmoke;
     padding: 10px;
+
     flex-wrap: wrap;
-    position: fixed;
-    top: 0;
+    position:fixed;
+    top: 0px;
     width: 100%;
     z-index: 2;
 
-
+   
 
 }
 .logout{
@@ -138,6 +148,7 @@ nav{
 
 
     }
-
+  
+   
   }
 

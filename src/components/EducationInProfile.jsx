@@ -1,18 +1,29 @@
 import React, { useEffect,useState } from 'react'
 import uniqid from 'uniqid';
 import { Button } from '@mui/material';
-function EducationInProfile({   profileForm,setprofieFrom, edit}) {
-    const [profileEducation,setProfileEducation] = useState(profileForm.Education)
-    let LastElement =   profileForm.Education.length-1
-    console.log(LastElement)
+import { useLayoutEffect } from 'react';
+import { useRef } from 'react';
+import { Html } from '@mui/icons-material';
+import { useContext } from 'react';
+import { UserContext } from '../userContext';
+function EducationInProfile({edit}) {
+    const {pForm,setpFrom,change} = useContext(UserContext)
+    const [profileEducation,setProfileEducation] = useState(pForm.Education)
+    let LastElement =   pForm.Education.length-1
+
+
+
+
     useEffect(()=>{
       
 
-     
-        
-        profileForm.Education[LastElement].isLast=true;
-        
-      },[profileForm.Education.length,profileForm.Education]);
+        pForm.Education[LastElement].isLast=true;
+
+      },[pForm.Education.length,pForm.Education]);
+
+useEffect(()=>{
+setProfileEducation(pForm.Education);
+},[change,pForm])
 
       const addEducation = ()=>{
     
@@ -26,9 +37,12 @@ function EducationInProfile({   profileForm,setprofieFrom, edit}) {
         };
    
         profileEducation.push(temp)
+        LastElement = profileEducation.length-1
         const a = profileEducation.map((data,index)=>{
-            console.log("index :",index ,"length :",LastElement+1)
-            if(index===LastElement+1){
+            console.log(`
+                        ${index} , ${LastElement}
+            `)
+            if(index===LastElement){
                 return {
                     ...data,
                 isLast:true
@@ -42,15 +56,16 @@ function EducationInProfile({   profileForm,setprofieFrom, edit}) {
             }
             
         })
+
         setProfileEducation(a);
+
+        setpFrom(pre=>({...pre,Education:a}))
+        console.log(pForm.Education)
         
 
-       
-        setprofieFrom(pre=>({...pre,Education:profileEducation}))
-
-        console.log(profileEducation)
         
-      }
+  }
+
 
 const removeEducation = ()=>{
 if(profileEducation.length>3){
@@ -72,41 +87,41 @@ if(profileEducation.length>3){
         
     })
     setProfileEducation(a);
+
         
     
        
-    setprofieFrom(pre=>({...pre,Education:profileEducation}))
+    setpFrom(pre=>({...pre,Education:profileEducation}))
 }else {
     alert("Oops you can't delete those feilds")
 }
     
  
 }
+
+
 const handleChange = (e,id)=>{
-  
-
-    
-    const newState = profileEducation.map(obj => {
-
+     
+      const newState =  pForm.Education.map(obj => {
+      
         if (obj.id === id) {
-          return {...obj,[e.target.getAttribute('name')]:e.target.innerText};
+          return {...obj,[e.currentTarget.getAttribute('name')]:e.currentTarget.textContent};
         }
 
         // 👇️ otherwise return object as is
         return obj;
       });
-    
-      console.log('newState:',newState)
-      setProfileEducation(newState)
-      console.log("profileEducation:",profileEducation)
 
-
-      setprofieFrom(pre=>({...pre,Education:profileEducation}))
-  
-    
-     console.log(profileForm.Education)
-
+      setpFrom(pre=>({...pre,Education:[...newState]}))
+    //   console.log("profileEducation : ",profileEducation)
+   console.log(pForm.Education);
 }
+
+
+// const educationupdate =(e,id)=>{
+//   setstate((pre=>({...pre,[e.currentTarget.getAttribute('name')]:e.currentTarget.textContent})))
+
+// }
 
 
 
@@ -126,31 +141,44 @@ const handleChange = (e,id)=>{
                                      name='educationTitle'
                                      contentEditable={edit} 
                                      suppressContentEditableWarning={true}
+                                    //  onInput={(e)=>handleChange(e,id)}
                                      onBlur={(e)=>handleChange(e,id)}
-
                                      
-                                     >{educationTitle}</h3>
+                                     dangerouslySetInnerHTML={{__html:educationTitle}}
+
+                                    
+
+                                     ></h3>
                                     <span
                                      className="education__studies"
                                      contentEditable={edit} 
                                      suppressContentEditableWarning={true}
+                                    //  onInput={(e)=>handleChange(e,id)}
                                      onBlur={(e)=>handleChange(e,id)}
-                                     name='instuteName'>{instuteName}</span>
+                                     dangerouslySetInnerHTML={{__html:instuteName}}
+                                     name='instuteName'></span>
+                                     
                                     <span 
                                     className="education__year"
                                     name='mark'
                                     contentEditable={edit} 
                                      suppressContentEditableWarning={true}
+                                    //  onInput={(e)=>handleChange(e,id)}
                                      onBlur={(e)=>handleChange(e,id)}
+                                     
+                                     dangerouslySetInnerHTML={{__html:mark}}
                                     >
-                                        {mark}</span>
+                                    </span>
                                     <span 
                                     className="education__year" 
                                     name='duration'
                                     contentEditable={edit} 
+                                    // onInput={(e)=>handleChange(e,id)}
+                                     onBlur={(e)=>handleChange(e,id)}
+                                     
+                                     dangerouslySetInnerHTML={{__html:duration}}
                                     suppressContentEditableWarning={true}
-                                    onBlur={(e)=>handleChange(e,id)}
-                                    >{duration}</span>
+                                    ></span>
                                 </div>
                             </div>
 
@@ -162,8 +190,8 @@ const handleChange = (e,id)=>{
 <div>
                         {edit && <>
                         
-                        <Button onClick={addEducation}>Add Education</Button>
-                        <Button onClick={removeEducation}>Remove Education</Button>
+                        <Button variant='outlined'  sx={{margin:'10px'}} onClick={addEducation}>Add Education</Button>
+                        <Button variant='outlined'  sx={{margin:'10px'}} onClick={removeEducation}>Remove Education</Button>
                         </>
                         }
 
